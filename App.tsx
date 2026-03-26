@@ -1,6 +1,8 @@
 import { StyleSheet, View, Text } from 'react-native';
+import { useNotification } from './src/notification/useNotifications';
 
 const App = () => {
+  useNotification()
   return (
     <View style={styles.container}>
       <Text style={{ color: 'red', fontSize: 16, fontFamily: 'Arial' }}>
