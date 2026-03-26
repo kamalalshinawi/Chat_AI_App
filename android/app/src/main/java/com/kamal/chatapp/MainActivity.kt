@@ -1,4 +1,4 @@
-package com.chat_ai_app
+package com.kamal.chat
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

@@ -1,4 +1,4 @@
-package com.chat_ai_app
+package com.kamal.chat
 
 import android.app.Application
 import com.facebook.react.PackageList
