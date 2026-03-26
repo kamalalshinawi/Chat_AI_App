@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { PermissionsAndroid } from 'react-native';
+import {  PermissionsAndroid } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 
 
@@ -30,5 +30,9 @@ export const useNotification = () => {
     useEffect(()=>{
         requestUserPermission();
         getToken()
-    },[])
+    },[]);
+
+
+
+  
 };
