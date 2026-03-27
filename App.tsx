@@ -1,7 +1,7 @@
-import GoogleSignIn from './src/features/auth/GoogleSignIn';
+import CameraGallery from './src/features/ImagePicker/CameraGallery';
 
 const App = () => {
-  return <GoogleSignIn />;
+  return <CameraGallery/>;
 };
 
 export default App;
