@@ -3,8 +3,10 @@ import React, { useState } from 'react';
 import AppHeader from '../components/AppHeader';
 import SentMessageCard from '../components/SentMessageCard';
 import ResponseMessage from '../components/ResponseMessage';
-import { s } from 'react-native-size-matters';
+import { s, vs } from 'react-native-size-matters';
 import { RECEIVED, SENT } from '../constants/typeMessage';
+import InputMessage from '../components/InputMessage';
+import { colors } from '../styles/colors';
 
 interface Message {
   id: number;
@@ -34,14 +36,16 @@ const ChatScreen = () => {
       id: 4,
       type: RECEIVED,
     },
+   
   ];
 
   const [message, setMessage] = useState<Message[]>(messagesList);
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <AppHeader />
       <FlatList
+        style={{ flex: 1 }}
         data={message}
         keyExtractor={item => item.id.toString()}
         renderItem={({ item }) => {
@@ -51,8 +55,14 @@ const ChatScreen = () => {
             <ResponseMessage ResponseMessage={item.message} />
           );
         }}
-        contentContainerStyle={{ paddingHorizontal: s(8) }}
+        contentContainerStyle={{
+          paddingBottom: vs(10),
+          paddingHorizontal: s(8),
+          backgroundColor: colors.white,
+          flexGrow: 1,
+        }}
       />
+      <InputMessage />
     </View>
   );
 };

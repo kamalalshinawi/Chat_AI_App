@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import BootSplash from 'react-native-bootsplash';
 import { View } from 'react-native';
 import ChatScreen from './src/screens/ChatScreen';
+import { colors } from './src/styles/colors';
 
 const App = () => {
   useEffect(() => {
@@ -15,9 +16,11 @@ const App = () => {
     });
   }, []);
   return (
-    <View>
-      <ChatScreen />
-    </View>
+    // <View style={{ backgroundColor: colors.white, flex: 1 }}>
+      // <View>
+        <ChatScreen />
+      // </View>
+    // </View>
   );
 };
 
