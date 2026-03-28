@@ -3,5 +3,5 @@ export const colors = {
   black: '#000000',
   gray: '#f5f5f5',
   mediumGray: '#ccc',
-  grayBack: '#E8E8E8',
+  grayBack: '#e2e2e2',
 };

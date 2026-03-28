@@ -22,7 +22,7 @@ export default ResponseMessage;
 const styles = StyleSheet.create({
   container: {
     marginVertical: vs(4),
-    marginBottom: vs(12),
+    marginBottom: vs(4),
   },
   messageContainer: {
     borderRadius: s(30),
