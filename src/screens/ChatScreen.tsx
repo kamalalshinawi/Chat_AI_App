@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View, KeyboardAvoidingView } from 'react-native';
 import React, { useState } from 'react';
 import AppHeader from '../components/AppHeader';
 import SentMessageCard from '../components/SentMessageCard';
@@ -36,10 +36,40 @@ const ChatScreen = () => {
       id: 4,
       type: RECEIVED,
     },
-   
   ];
 
   const [message, setMessage] = useState<Message[]>(messagesList);
+  const [msInput, setMsInput] = useState('');
+
+  const sentMessageToAi = () => {
+    setMessage(prevMessages => {
+      return [
+        ...prevMessages,
+        {
+          message: msInput,
+          id: prevMessages.length + 1,
+          type: SENT,
+        },
+      ];
+    });
+    setTimeout(() => {
+      receiveMessages('Hello This is dummy Response ');
+    }, 1800);
+  };
+
+  // got the receiveMessages
+  const receiveMessages = (response: string) => {
+    setMessage(prevMessages => {
+      return [
+        ...prevMessages,
+        {
+          message: response,
+          id: prevMessages.length + 1,
+          type: RECEIVED,
+        },
+      ];
+    });
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -62,7 +92,11 @@ const ChatScreen = () => {
           flexGrow: 1,
         }}
       />
-      <InputMessage />
+      <InputMessage
+        messageValue={msInput}
+        setMessageValue={setMsInput}
+        onMessageSent={sentMessageToAi}
+      />
     </View>
   );
 };

@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'flex-end',
     flexDirection: 'row',
-    marginVertical: vs(12),
+    marginVertical: vs(3),
   },
   messageContainer: {
     backgroundColor: colors.black,
