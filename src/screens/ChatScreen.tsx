@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, View, KeyboardAvoidingView } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import AppHeader from '../components/AppHeader';
 import SentMessageCard from '../components/SentMessageCard';
 import ResponseMessage from '../components/ResponseMessage';
@@ -41,6 +41,13 @@ const ChatScreen = () => {
 
   const [message, setMessage] = useState<Message[]>([]);
   const [msInput, setMsInput] = useState('');
+  const flatListRef = useRef<FlatList>(null);
+
+  const scrollToBottom = () => {
+    if (flatListRef.current && message.length > 0) {
+      flatListRef.current.scrollToEnd({ animated: true });
+    }
+  };
 
   const sentMessageToAi = () => {
     setMessage(prevMessages => {
@@ -76,6 +83,7 @@ const ChatScreen = () => {
     <View style={{ flex: 1 }}>
       <AppHeader />
       <FlatList
+        ref={flatListRef}
         style={{ flex: 1 }}
         data={message}
         keyExtractor={item => item.id.toString()}
@@ -93,6 +101,8 @@ const ChatScreen = () => {
           flexGrow: 1,
         }}
         ListEmptyComponent={<EmptyChat />}
+        onLayout={scrollToBottom}
+        onContentSizeChange={scrollToBottom}
       />
       <InputMessage
         messageValue={msInput}
