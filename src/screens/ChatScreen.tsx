@@ -7,6 +7,7 @@ import { s, vs } from 'react-native-size-matters';
 import { RECEIVED, SENT } from '../constants/typeMessage';
 import InputMessage from '../components/InputMessage';
 import { colors } from '../styles/colors';
+import EmptyChat from '../components/EmptyChat';
 
 interface Message {
   id: number;
@@ -38,7 +39,7 @@ const ChatScreen = () => {
     },
   ];
 
-  const [message, setMessage] = useState<Message[]>(messagesList);
+  const [message, setMessage] = useState<Message[]>([]);
   const [msInput, setMsInput] = useState('');
 
   const sentMessageToAi = () => {
@@ -91,6 +92,7 @@ const ChatScreen = () => {
           backgroundColor: colors.white,
           flexGrow: 1,
         }}
+        ListEmptyComponent={<EmptyChat />}
       />
       <InputMessage
         messageValue={msInput}

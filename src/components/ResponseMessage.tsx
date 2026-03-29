@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     marginBottom: vs(6),
   },
   messageContainer: {
-    borderRadius: s(30),
+    borderRadius: s(18),
     padding: s(10),
     maxWidth: '80%',
     backgroundColor: colors.grayBack,
