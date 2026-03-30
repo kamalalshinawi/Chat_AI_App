@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import BootSplash from 'react-native-bootsplash';
-import { View } from 'react-native';
 import ChatScreen from './src/screens/ChatScreen';
-import { colors } from './src/styles/colors';
+import AuthScreen from './src/screens/AuthScreen';
 
 const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   useEffect(() => {
     const init = async () => {
       // …do multiple sync or async tasks
@@ -16,11 +17,11 @@ const App = () => {
     });
   }, []);
   return (
-    // <View style={{ backgroundColor: colors.white, flex: 1 }}>
-      // <View>
-        <ChatScreen />
-      // </View>
-    // </View>
+    isAuthenticated ? (
+      <ChatScreen />
+    ) : (
+      <AuthScreen onAuthenticated={() => setIsAuthenticated(true)} />
+    )
   );
 };
 

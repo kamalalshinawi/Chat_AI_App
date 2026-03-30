@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Button, Image } from 'react-native';
-import React, { useState } from 'react';
+import { Button, StyleSheet, View } from 'react-native';
+import React, { useEffect } from 'react';
 import {
   GoogleSignin,
   isErrorWithCode,
@@ -7,21 +7,24 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 
-const GoogleSignIn = () => {
-  GoogleSignin.configure({
-    webClientId:
-      '291353308749-mul2vg6p0j664u5m94ggrpkbv8js9dp0.apps.googleusercontent.com',
-  });
+type GoogleSignInProps = {
+  onSignInSuccess: () => void;
+};
 
-  const [userInfo, setUserInfo] = useState();
+const GoogleSignIn = ({ onSignInSuccess }: GoogleSignInProps) => {
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId:
+        '291353308749-mul2vg6p0j664u5m94ggrpkbv8js9dp0.apps.googleusercontent.com',
+    });
+  }, []);
 
   const googleSignIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
       const response = await GoogleSignin.signIn();
       if (isSuccessResponse(response)) {
-        setUserInfo(response.data);
-        console.log(response.data);
+        onSignInSuccess();
       } else {
         // sign in was cancelled by user
       }
@@ -45,18 +48,7 @@ const GoogleSignIn = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={{ color: 'red', fontSize: 16, fontFamily: 'Arial' }}>
-        kamal alshinawi
-      </Text>
-      <Button title="Sign In With google" onPress={googleSignIn} />
-      <Text style={{ fontSize: 16, color: 'red' }}>{userInfo?.user?.name}</Text>
-      <Text style={{ fontSize: 16, color: 'red' }}>
-        {userInfo?.user?.email}
-      </Text>
-      <Image
-        style={{ height: 100, width: 100, borderRadius: 50 }}
-        source={{ uri: userInfo?.user?.photo }}
-      />
+      <Button title="Sign In With Google" onPress={googleSignIn} />
     </View>
   );
 };
@@ -65,9 +57,6 @@ export default GoogleSignIn;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: 'black',
-    justifyContent: 'center',
     alignItems: 'center',
   },
 });
