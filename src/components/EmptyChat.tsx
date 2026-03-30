@@ -1,13 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { s, vs } from 'react-native-size-matters';
-import AppIcon from '../assets/Icons/AppIcon';
+import NewIcon from '../assets/Icons/NewIcon';
 
 
 const EmptyChat = () => {
   return (
     <View style={styles.container}>
-      <AppIcon />
+      <NewIcon />
       <Text style={styles.title}>Hello,</Text>
       <Text style={styles.subtitle}>What can I help with?</Text>
     </View>
