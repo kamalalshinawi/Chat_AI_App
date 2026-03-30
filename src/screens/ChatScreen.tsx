@@ -1,5 +1,9 @@
-import { FlatList, StyleSheet, View, KeyboardAvoidingView } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import {
+  FlatList,
+  StyleSheet,
+  View,
+} from 'react-native';
+import React, { useRef, useState } from 'react';
 import AppHeader from '../components/AppHeader';
 import SentMessageCard from '../components/SentMessageCard';
 import ResponseMessage from '../components/ResponseMessage';
@@ -8,6 +12,7 @@ import { RECEIVED, SENT } from '../constants/typeMessage';
 import InputMessage from '../components/InputMessage';
 import { colors } from '../styles/colors';
 import EmptyChat from '../components/EmptyChat';
+import { callHuggingFace } from '../api/httpRequest.ts';
 
 interface Message {
   id: number;
@@ -16,29 +21,6 @@ interface Message {
 }
 
 const ChatScreen = () => {
-  const messagesList: Message[] = [
-    {
-      message: 'Hello I need a help',
-      id: 1,
-      type: SENT,
-    },
-    {
-      message: 'Hi, how can i help you',
-      id: 2,
-      type: RECEIVED,
-    },
-    {
-      message: 'Hello I need a help',
-      id: 3,
-      type: SENT,
-    },
-    {
-      message: 'Hi, how can i help you',
-      id: 4,
-      type: RECEIVED,
-    },
-  ];
-
   const [message, setMessage] = useState<Message[]>([]);
   const [msInput, setMsInput] = useState('');
   const flatListRef = useRef<FlatList>(null);
@@ -49,20 +31,34 @@ const ChatScreen = () => {
     }
   };
 
-  const sentMessageToAi = () => {
+  const sentMessageToAi = async () => {
+    const prompt = msInput.trim();
+    if (!prompt) {
+      return;
+    }
+
     setMessage(prevMessages => {
       return [
         ...prevMessages,
         {
-          message: msInput,
+          message: prompt,
           id: prevMessages.length + 1,
           type: SENT,
         },
       ];
     });
-    setTimeout(() => {
-      receiveMessages('Hello This is dummy Response ');
-    }, 1800);
+    setMsInput('');
+
+    try {
+      const response = await callHuggingFace(prompt);
+      receiveMessages(response);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Request failed. Please try again.';
+      receiveMessages(errorMessage);
+    }
   };
 
   // got the receiveMessages
@@ -80,11 +76,11 @@ const ChatScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <AppHeader />
       <FlatList
         ref={flatListRef}
-        style={{ flex: 1 }}
+        style={styles.list}
         data={message}
         keyExtractor={item => item.id.toString()}
         renderItem={({ item }) => {
@@ -94,12 +90,7 @@ const ChatScreen = () => {
             <ResponseMessage ResponseMessage={item.message} />
           );
         }}
-        contentContainerStyle={{
-          paddingBottom: vs(10),
-          paddingHorizontal: s(8),
-          backgroundColor: colors.white,
-          flexGrow: 1,
-        }}
+        contentContainerStyle={styles.contentContainer}
         ListEmptyComponent={<EmptyChat />}
         onLayout={scrollToBottom}
         onContentSizeChange={scrollToBottom}
@@ -115,4 +106,13 @@ const ChatScreen = () => {
 
 export default ChatScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+  list: { flex: 1 },
+  contentContainer: {
+    paddingBottom: vs(10),
+    paddingHorizontal: s(8),
+    backgroundColor: colors.white,
+    flexGrow: 1,
+  },
+});
