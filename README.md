@@ -1,97 +1,163 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Chat AI App
 
-# Getting Started
+A React Native mobile application where users sign in with Google and chat with an AI assistant powered by the Hugging Face Chat Completions API.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Highlights
 
-## Step 1: Start Metro
+- Google Sign-In authentication gate before accessing chat
+- Clean chat interface with sent/received message cards
+- AI response typing animation for better UX
+- Hugging Face API integration with clear runtime error messages
+- Boot splash support for smoother app startup
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## Tech Stack
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+- React Native `0.84.1` + TypeScript
+- React `19`
+- `@react-native-google-signin/google-signin`
+- `axios`
+- `react-native-config`
+- `react-native-bootsplash`
+- `react-native-size-matters`
+- Firebase Messaging dependency scaffold (`@react-native-firebase/messaging`)
 
-```sh
-# Using npm
+## Project Structure
+
+```text
+.
+├── App.tsx
+├── src
+│   ├── api
+│   │   └── httpRequest.ts
+│   ├── components
+│   │   ├── AppHeader.tsx
+│   │   ├── EmptyChat.tsx
+│   │   ├── InputMessage.tsx
+│   │   ├── ResponseMessage.tsx
+│   │   ├── SentMessageCard.tsx
+│   │   └── TypingEffect.tsx
+│   ├── features
+│   │   ├── auth
+│   │   │   └── GoogleSignIn.tsx
+│   │   └── ImagePicker
+│   │       └── CameraGallery.tsx
+│   ├── notification
+│   │   └── useNotifications.ts
+│   └── screens
+│       ├── AuthScreen.tsx
+│       └── ChatScreen.tsx
+└── android/app/google-services.json (local setup file)
+```
+
+## Prerequisites
+
+- Node.js `>= 22.11.0`
+- npm (or yarn)
+- React Native development environment configured:
+  - [Android setup](https://reactnative.dev/docs/set-up-your-environment?os=linux&platform=android)
+  - [iOS setup](https://reactnative.dev/docs/set-up-your-environment?os=macos&platform=ios) (macOS only)
+
+## Getting Started
+
+### 1) Install dependencies
+
+```bash
+npm install
+```
+
+### 2) Configure environment variables
+
+Create `.env` from the example template:
+
+```bash
+cp .env.example .env
+```
+
+Add your Hugging Face token in `.env`:
+
+```env
+TOKEN_KEY_HUGGING_FACE=hf_your_token_here
+```
+
+### 3) Configure Google Sign-In (Android)
+
+1. Add your Firebase Android config file to:
+   - `android/app/google-services.json`
+2. Ensure `webClientId` in `src/features/auth/GoogleSignIn.tsx` matches your Google OAuth Web Client ID.
+3. In Firebase/Google Cloud Console, configure:
+   - Android package name: `com.kamal.chat`
+   - SHA-1 / SHA-256 fingerprints for your debug/release keys
+
+### 4) Start Metro
+
+```bash
 npm start
-
-# OR using Yarn
-yarn start
 ```
 
-## Step 2: Build and run your app
+### 5) Run the app
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
+```bash
+# Android
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
+```bash
+# iOS (macOS only)
+cd ios && pod install && cd ..
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+## How It Works
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+1. `App.tsx` starts at `AuthScreen` until login succeeds.
+2. `GoogleSignIn.tsx` handles OAuth and notifies the app on successful sign-in.
+3. `ChatScreen.tsx` sends prompts through `src/api/httpRequest.ts`.
+4. `httpRequest.ts` calls Hugging Face endpoint `https://router.huggingface.co/v1/chat/completions`.
+5. Responses are rendered as assistant messages with typing animation.
 
-## Step 3: Modify your app
+## Available Scripts
 
-Now that you have successfully run the app, let's make changes!
+- `npm start` - start Metro bundler
+- `npm run android` - build/run Android app
+- `npm run ios` - build/run iOS app
+- `npm test` - run Jest tests
+- `npm run lint` - run ESLint
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+## Troubleshooting
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+- **Missing Hugging Face token**
+  - Ensure `.env` exists and includes `TOKEN_KEY_HUGGING_FACE`
+  - Rebuild the app after editing `.env`
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+- **Hugging Face 401 error**
+  - Verify token value and permissions
+  - Confirm token is passed without extra quotes or duplicate `Bearer` prefix
 
-## Congratulations! :tada:
+- **Google Sign-In fails**
+  - Confirm `google-services.json` belongs to the same Firebase project
+  - Validate package name and SHA fingerprints
+  - Check Google Play Services availability on emulator/device
 
-You've successfully run and modified your React Native App. :partying_face:
+- **Android build issues**
+  - Clean and retry:
+    ```bash
+    cd android && ./gradlew clean && cd ..
+    npm run android
+    ```
 
-### Now what?
+## Security Notes
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+- Keep `.env` out of source control
+- Do not commit production API keys
+- Rotate tokens immediately if exposed
 
-# Troubleshooting
+## Roadmap Ideas
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+- Persist authenticated session across app restarts
+- Add sign-out action in chat header
+- Save chat history locally or remotely
+- Wire notification hook into active app flow
 
-# Learn More
+## License
 
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+This project currently has no explicit license. Add a `LICENSE` file before public/open-source distribution.
