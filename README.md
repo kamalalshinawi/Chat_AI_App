@@ -2,6 +2,11 @@
 
 A React Native mobile application where users sign in with Google and chat with an AI assistant powered by the Hugging Face Chat Completions API.
 
+
+
+[demo.webm](https://github.com/user-attachments/assets/1554733d-ecd6-4aa9-aa7c-94eb74ea5518)
+
+
 ## Highlights
 
 - Google Sign-In authentication gate before accessing chat
